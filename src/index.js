@@ -124,6 +124,7 @@ window.scrollBy({
 // страницы.Мы предоставлям тебе полную свободу действий в реализации, можешь использовать
 // любые библиотеки.
 
+import InfiniteScroll from 'infinite-scroll';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -167,8 +168,21 @@ async function inputHandler(event) {
       render(data);
       Notify.success(`Hooray! We found ${data.totalHits} images.`);
     });
+    infinityScroll();
   } catch (error) {
     console.log('error message in try-catch: ', error.message);
+  }
+}
+
+async function infinityScroll() {
+  let infScroll = new InfiniteScroll(galleryEl, {
+    path: fetchPixabayInstance.fetchApi(),
+  });
+
+  try {
+    infScroll().then(render);
+  } catch (error) {
+    console.log(error.message);
   }
 }
 
@@ -207,6 +221,7 @@ function clearGallery() {
   galleryEl.innerHTML = '';
 }
 
+// слайдер
 let gallery = new SimpleLightbox('.photo-card a', {
   enableKeyboard: true,
   captionsData: 'alt',
